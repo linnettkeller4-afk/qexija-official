@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qexija (QXJ) — Add to MetaMask</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:40px 16px;display:grid;place-items:center;background:radial-gradient(ellipse at top,#1a2b55,#080d1c 65%);color:#f5f7ff;font-family:Arial,sans-serif}
+main{width:min(100%,460px);padding:32px 24px;border:1px solid #34466f;border-radius:22px;background:#111b32;text-align:center;box-shadow:0 20px 70px #0006}
+.logo{width:116px;height:116px;object-fit:contain}h1{letter-spacing:.18em;margin:12px 0 4px}.ticker{color:#a9c4ff;font-size:20px;font-weight:bold}.tag{color:#b8c5df}
+.details{text-align:left;background:#091328;padding:16px;border-radius:12px;color:#c3cee2;font-size:14px;line-height:1.8;overflow-wrap:anywhere;margin:22px 0}
+button{width:100%;padding:16px;border:0;border-radius:11px;background:linear-gradient(100deg,#168cff,#873cff);color:white;font-weight:bold;font-size:15px;cursor:pointer}
+#status{min-height:40px;color:#c7d5ef;font-size:13px;line-height:1.5}.foot{font-size:11px;color:#8998b5;line-height:1.5}
+</style>
+</head>
+<body><main>
+<img class="logo" src="https://i.postimg.cc/XvmRZNP9/tou-ming-tu-LOGO.png" alt="Qexija logo">
+<h1>QEXIJA</h1><div class="ticker">QXJ TOKEN</div>
+<p class="tag">Unlock The Future Of Digital Value</p>
+<div class="details">
+<strong>Network:</strong> BNB Smart Chain<br><strong>Chain ID:</strong> 56<br>
+<strong>Token:</strong> Qexija (QXJ)<br><strong>Decimals:</strong> 18<br>
+<strong>Contract:</strong><br>0x0f94663834869872dbbd89A2fd8Ec965232db4fC
+</div>
+<button id="add">ADD QXJ TO METAMASK</button>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="foot">Review the token and network details in MetaMask before approving. This page never asks for your seed phrase or private key.</div>
+</main>
+<script>
+const token={address:"0x0f94663834869872dbbd89A2fd8Ec965232db4fC",symbol:"QXJ",decimals:18,image:"https://i.postimg.cc/XvmRZNP9/tou-ming-tu-LOGO.png"};
+const status=document.getElementById("status");
+document.getElementById("add").addEventListener("click",async()=>{
+ if(!window.ethereum){status.textContent="MetaMask was not detected. Open this page in a desktop browser with the MetaMask extension.";return;}
+ try{
+  let chain=await window.ethereum.request({method:"eth_chainId"});
+  if(chain!=="0x38"){
+   try{await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x38"}]});}
+   catch(e){
+    if(e.code===4902){await window.ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:"0x38",chainName:"BNB Smart Chain",nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},rpcUrls:["https://bsc-dataseed.bnbchain.org"],blockExplorerUrls:["https://bscscan.com"]}]});}
+    else throw e;
+   }
+  }
+  const ok=await window.ethereum.request({method:"wallet_watchAsset",params:{type:"ERC20",options:token}});
+  status.textContent=ok?"MetaMask accepted the QXJ request. Check your token list.":"The request was not accepted. You can try again.";
+ }catch(e){status.textContent="Request failed: "+(e.message||"Please check MetaMask.");}
+});
+</script></body></html>
